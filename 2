@@ -1,0 +1,23 @@
+from telethon import TelegramClient, events
+import os
+
+# اقرأ القيم من المتغيرات البيئية (رح نحطهم في Render)
+api_id = int(os.getenv("2972444"))
+api_hash = os.getenv("4ba5125466e20c7554c98da3a4815ba")
+bot_token = os.getenv("BOT_TOKEN")
+
+# القنوات
+source_channels = os.getenv("@Syria_Now7").split(",")  # مثل: @ch1,@ch2
+target_channel = os.getenv("@SyriaToday4")  # مثل: @mychannel
+
+client = TelegramClient("bot", api_id, api_hash).start(bot_token=bot_token)
+
+@client.on(events.NewMessage(chats=source_channels))
+async def handler(event):
+    try:
+        await client.send_message(target_channel, event.message)
+    except Exception as e:
+        print(f"Error: {e}")
+
+print("🚀 Bot is running...")
+client.run_until_disconnected()
